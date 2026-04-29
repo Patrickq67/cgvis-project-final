@@ -1,97 +1,109 @@
-# Especificação da Implementação
+Jogo de corrida 3D inspirado em Mario Kart 64
 
-> [!CAUTION]
-> - Você <ins>**não pode utilizar ferramentas de IA para escrever esta
->   especificação**</ins>
+https://www.youtube.com/watch?v=hxk2yPg_yoU
 
-## Integrantes da dupla
+# INF Kart 3D
 
-- **Aluno 1 - Nome**: <mark>`<preencher>`</mark>
-- **Aluno 1 - Cartão UFRGS**: <mark>`<preencher>`</mark>
+## 1. Descrição da Aplicação
 
-- **Aluno 2 - Nome**: <mark>`<preencher>`</mark>
-- **Aluno 2 - Cartão UFRGS**: <mark>`<preencher>`</mark>
+Este projeto consiste no desenvolvimento de uma aplicação gráfica 3D interativa inspirada em jogos de corrida como Mario Kart. O usuário controla um veículo em uma pista tridimensional com o objetivo de completar voltas enquanto evita colisões com obstáculos presentes no ambiente.
 
-## Detalhes do que será implementado
+A aplicação possui lógica de controle não-trivial, incluindo movimentação do veículo, detecção de colisões, controle de câmeras e animação de objetos no ambiente.
 
-- **Título do trabalho**: <mark>`<preencher>`</mark>
-- **Parágrafo curto descrevendo o que será implementado**: <mark>`<preencher>`</mark>
+## 2. Interação com o Usuário
 
-## Especificação visual
+A interação será realizada através de teclado e mouse:
 
-### Vídeo - Link
+Teclado:
 
-> [!IMPORTANT]
-> - Coloque aqui um link para um vídeo que mostre a aplicação gráfica
->   de referência que você vai implementar. **Sua implementação deverá
->   ser o mais parecido possível com o que é mostrado no vídeo (mais
->   detalhes abaixo).**
-> - **Você não pode escolher como referência: (1) algum trabalho realizado
->   por outros alunos desta disciplina, em semestres anteriores. (2) Minecraft.**
-> - Por exemplo, você pode colocar um vídeo de um jogo que você gosta,
->   e seu trabalho final será uma re-implementação do jogo.
-> - O vídeo pode ser um link para YouTube, Google Drive, ou arquivo mp4 dentro
->   do próprio repositório. Mas, garanta que qualquer um tenha
->   permissão de acesso ao vídeo através deste link.
+W / S: acelerar / frear
 
-<mark>`<preencher>`</mark>
+A / D: virar esquerda / direita
 
-### Vídeo - Timestamp
+C: alternar entre câmeras
 
-> [!IMPORTANT]
-> - Coloque aqui um **intervalo de ~30 segundos** do vídeo acima, que
->   será a base de comparação para avaliar se o seu trabalho final
->   conseguiu ou não reproduzir a referência.
+R: reiniciar posição do veículo
 
-- **Timestamp inicial**: <mark>`<preencher>`</mark>
-- **Timestamp final**: <mark>`<preencher>`</mark>
+## 3. Câmeras Virtuais
 
-### Imagens
+Serão implementados dois tipos de câmera:
 
-> [!IMPORTANT]
-> - Coloque aqui **três imagens** capturadas do vídeo acima, que você
->   irá usar como ilustração para as explicações que vêm abaixo.
+**Câmera em terceira pessoa (look-at):**
 
-<mark>`<preencher>`</mark>
+Posicionada atrás do veículo, acompanhando sua movimentação
 
-## Especificação textual
+**Câmera livre:**
 
-Para cada um dos requisitos abaixo (detalhados no [Enunciado do Trabalho final - Moodle](https://moodle.ufrgs.br/mod/assign/view.php?id=6018620)), escreva um parágrafo **curto** explicando como este requisito será atendido, apontando itens específicos do vídeo/imagens que você incluiu acima que atendem estes requisitos.
+Movimentação independente controlada pelo usuário via mouse e teclado
 
-### Malhas poligonais complexas
-<mark>`<preencher>`</mark>
+## 4. Objetos Virtuais
 
-### Transformações geométricas controladas pelo usuário
-<mark>`<preencher>`</mark>
+A cena conterá os seguintes objetos:
 
-### Diferentes tipos de câmeras
-<mark>`<preencher>`</mark>
+Veículo controlado pelo jogador
 
-### Instâncias de objetos
-<mark>`<preencher>`</mark>
+Pista de corrida
 
-### Testes de intersecção
-<mark>`<preencher>`</mark>
+Obstáculos (paredes, cones)
 
-### Modelos de Iluminação em todos os objetos
-<mark>`<preencher>`</mark>
+Objetos decorativos (árvores)
 
-### Mapeamento de texturas em todos os objetos
-<mark>`<preencher>`</mark>
+## 5. Transformações Geométricas
 
-### Movimentação com curva Bézier cúbica
-<mark>`<preencher>`</mark>
+Serão aplicadas transformações geométricas nos objetos:
 
-### Animações baseadas no tempo ($\Delta t$)
-<mark>`<preencher>`</mark>
+Translação: movimentação do veículo
 
-## Limitações esperadas
+Rotação: orientação do veículo ao virar
 
-> [!IMPORTANT]
-> - Coloque aqui uma lista de detalhes visuais ou de interação que
->   aparecem no vídeo e/ou imagens acima, mas que você **não pretende
->   implementar** ou que você **irá implementar parcialmente**.
-> - Para cada item, **explique por que** não será implementado ou por
->   que será implementado parcialmente.
+Escala: ajuste de tamanho de objetos da cena
 
-<mark>`<preencher>`</mark>
+## 6. Testes de Intersecção (Colisão)
+
+Serão implementados testes de colisão entre:
+
+Veículo do jogador e paredes da pista
+
+Veículo do jogador e obstáculos
+
+As colisões impedirão o atravessamento dos objetos, contribuindo para a lógica do jogo.
+
+A implementação será realizada no arquivo separado 
+
+7. Modelos de Iluminação
+
+Todos os objetos da cena utilizarão um modelo de iluminação não-trivial.
+
+Luz ambiente
+
+Luz difusa
+
+Luz especular
+
+## 8. Mapeamento de Texturas
+
+Todos os objetos da cena terão suas cores definidas por texturas.
+
+Textura da pista (asfalto)
+
+Textura do veículo
+
+Textura dos objetos decorativos (árvores, obstáculos)
+
+## 9. Curvas de Bézier
+
+Um objeto (um veículo NPC) terá sua movimentação definida por uma curva de Bézier cúbica.
+
+## 10. Animação Baseada no Tempo
+
+Todas as movimentações da aplicação serão baseadas no tempo (Δt), garantindo comportamento consistente independente da taxa de quadros (FPS).
+
+## 11. Objetivo da Aplicação
+
+O objetivo do usuário será controlar o veículo e percorrer a pista evitando colisões, podendo reiniciar e explorar a cena utilizando diferentes câmeras.
+
+## 12. Funcionalidades Extras (Opcional)
+
+## 13. Considerações Finais
+
+O projeto será desenvolvido em linguagem C++ utilizando OpenGL, com foco em desempenho e interação em tempo real. O desenvolvimento seguirá boas práticas de versionamento com commits incrementais no Git.
