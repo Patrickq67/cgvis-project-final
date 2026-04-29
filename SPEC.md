@@ -102,7 +102,7 @@ Todas as movimentações da aplicação serão baseadas no tempo (Δt), garantin
 
 O objetivo do usuário será controlar o veículo e percorrer a pista evitando colisões, podendo reiniciar e explorar a cena utilizando diferentes câmeras.
 
-## 12. Funcionalidades Extras (Opcional)
+## 12. Funcionalidades Extras
 
 ## 13. Considerações Finais
 
