@@ -332,9 +332,34 @@ int main(int argc, char* argv[])
     glCullFace(GL_BACK);
     glFrontFace(GL_CCW);
 
+    //////////////////////////////////////////////////// Controladora do Kart
+    float kart_x = 0.0f;
+    float kart_z = 0.0f;
+
+    float kart_rotation = 0.0f;
+    //////////////////////////////////////////////////// Controladora do Kart
+
     // Ficamos em um loop infinito, renderizando, até que o usuário feche a janela
     while (!glfwWindowShouldClose(window))
     {
+        ///////////// Contralando a rotação do kart
+        if (glfwGetKey(window, GLFW_KEY_W) == GLFW_PRESS){
+            kart_z -= 0.01f;
+        }
+
+        if (glfwGetKey(window, GLFW_KEY_S) == GLFW_PRESS){
+            kart_z += 0.01f;
+        }
+
+        if (glfwGetKey(window, GLFW_KEY_A) == GLFW_PRESS){    
+            kart_rotation += 0.02f;
+        }
+
+        if (glfwGetKey(window, GLFW_KEY_D) == GLFW_PRESS){
+            kart_rotation -= 0.02f;
+        }
+        ///////////// Contralando a rotação do kart
+
         // Aqui executamos as operações de renderização
 
         // Definimos a cor do "fundo" do framebuffer como branco.  Tal cor é
@@ -424,8 +449,10 @@ int main(int argc, char* argv[])
         DrawVirtualObject("the_sphere");
 
         // Desenhamos o modelo do coelho
-        model = Matrix_Translate(1.0f,0.0f,0.0f)
-              * Matrix_Rotate_X(g_AngleX + (float)glfwGetTime() * 0.1f);
+        //////////////
+        model = Matrix_Translate(kart_x,0.0f,kart_z)
+                * Matrix_Rotate_Y(kart_rotation);
+        //////////////
         glUniformMatrix4fv(g_model_uniform, 1 , GL_FALSE , glm::value_ptr(model));
         glUniform1i(g_object_id_uniform, BUNNY);
         DrawVirtualObject("the_bunny");
