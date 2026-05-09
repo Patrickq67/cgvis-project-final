@@ -339,16 +339,25 @@ int main(int argc, char* argv[])
     float kart_rotation = 0.0f;
     //////////////////////////////////////////////////// Controladora do Kart
 
+    //////////////////////////////////////////////////// Camera Distancia
+    float camera_distance = 3.0f;
+    float camera_height = 1.5f;
+    //////////////////////////////////////////////////// Camera Distancia
+
     // Ficamos em um loop infinito, renderizando, até que o usuário feche a janela
     while (!glfwWindowShouldClose(window))
     {
         ///////////// Contralando a rotação do kart
+        // W o S
         if (glfwGetKey(window, GLFW_KEY_W) == GLFW_PRESS){
-            kart_z -= 0.01f;
+            kart_x += sin(kart_rotation) * 0.01f;
+            kart_z -= cos(kart_rotation) * 0.01f;
         }
 
+        // E o S
         if (glfwGetKey(window, GLFW_KEY_S) == GLFW_PRESS){
-            kart_z += 0.01f;
+            kart_x -= sin(kart_rotation) * 0.01f;
+            kart_z += cos(kart_rotation) * 0.01f;
         }
 
         if (glfwGetKey(window, GLFW_KEY_A) == GLFW_PRESS){    
@@ -382,20 +391,40 @@ int main(int argc, char* argv[])
         // variáveis g_CameraDistance, g_CameraPhi, e g_CameraTheta são
         // controladas pelo mouse do usuário. Veja as funções CursorPosCallback()
         // e ScrollCallback().
+        
+        /*
         float r = g_CameraDistance;
         float y = r*sin(g_CameraPhi);
         float z = r*cos(g_CameraPhi)*cos(g_CameraTheta);
         float x = r*cos(g_CameraPhi)*sin(g_CameraTheta);
+        */
+        
+
+        //////////////// câmera atrás do kart
+        float camera_x = kart_x - sin(kart_rotation) * camera_distance;
+        float camera_y = camera_height;
+        float camera_z = kart_z + cos(kart_rotation) * camera_distance;
 
         // Abaixo definimos as varáveis que efetivamente definem a câmera virtual.
         // Veja slides 195-227 e 229-234 do documento Aula_08_Sistemas_de_Coordenadas.pdf.
-        glm::vec4 camera_position_c  = glm::vec4(x,y,z,1.0f); // Ponto "c", centro da câmera
-        glm::vec4 camera_lookat_l    = glm::vec4(0.0f,0.0f,0.0f,1.0f); // Ponto "l", para onde a câmera (look-at) estará sempre olhando
+        //glm::vec4 camera_position_c  = glm::vec4(x,y,z,1.0f); // Ponto "c", centro da câmera
+        glm::vec4 camera_position_c = glm::vec4(camera_x, camera_y, camera_z, 1.0f);
+        
+        //glm::vec4     = glm::vec4(0.0f,0.0f,0.0f,1.0f); // Ponto "l", para onde a câmera (look-at) estará sempre olhando
+        float look_distance = 2.0f;
+
+        glm::vec4 camera_lookat_l = glm::vec4(
+            kart_x + sin(kart_rotation),
+            0.5f,
+            kart_z - cos(kart_rotation),
+            1.0f
+        );
+        
         glm::vec4 camera_view_vector = camera_lookat_l - camera_position_c; // Vetor "view", sentido para onde a câmera está virada
         glm::vec4 camera_up_vector   = glm::vec4(0.0f,1.0f,0.0f,0.0f); // Vetor "up" fixado para apontar para o "céu" (eito Y global)
 
         // Computamos a matriz "View" utilizando os parâmetros da câmera para
-        // definir o sistema de coordenadas da câmera.  Veja slides 2-14, 184-190 e 236-242 do documento Aula_08_Sistemas_de_Coordenadas.pdf.
+        // definir o sicamera_lookat_lstema de coordenadas da câmera.  Veja slides 2-14, 184-190 e 236-242 do documento Aula_08_Sistemas_de_Coordenadas.pdf.
         glm::mat4 view = Matrix_Camera_View(camera_position_c, camera_view_vector, camera_up_vector);
 
         // Agora computamos a matriz de Projeção.
@@ -449,10 +478,10 @@ int main(int argc, char* argv[])
         DrawVirtualObject("the_sphere");
 
         // Desenhamos o modelo do coelho
-        //////////////
+        ////////////// DESENHANDO FUTURO KART
         model = Matrix_Translate(kart_x,0.0f,kart_z)
-                * Matrix_Rotate_Y(kart_rotation);
-        //////////////
+                * Matrix_Rotate_Y(-kart_rotation);
+        ////////////// DESENHANDO FUTURO KART
         glUniformMatrix4fv(g_model_uniform, 1 , GL_FALSE , glm::value_ptr(model));
         glUniform1i(g_object_id_uniform, BUNNY);
         DrawVirtualObject("the_bunny");
