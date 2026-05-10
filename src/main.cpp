@@ -344,9 +344,25 @@ int main(int argc, char* argv[])
     float camera_height = 1.5f;
     //////////////////////////////////////////////////// Camera Distancia
 
+
+
+    //////////////////////////////////////////////////// Esfera
+    float esfera_x = -5.0f;
+    float esfera_z = 0.0f;
+    float esfera_raio = 0.8f;
+
+    float kart_raio = 0.5f;
+    //////////////////////////////////////////////////// Esfera
+
+
+
     // Ficamos em um loop infinito, renderizando, até que o usuário feche a janela
     while (!glfwWindowShouldClose(window))
     {
+
+        float old_kart_x = kart_x;
+        float old_kart_z = kart_z;
+
         ///////////// Contralando a rotação do kart
         // W o S
         if (glfwGetKey(window, GLFW_KEY_W) == GLFW_PRESS){
@@ -368,6 +384,23 @@ int main(int argc, char* argv[])
             kart_rotation -= 0.02f;
         }
         ///////////// Contralando a rotação do kart
+
+
+        ///////////// Colisão esfera e Coelho
+        float dx = kart_x - esfera_x;
+        float dz = kart_z - esfera_z;
+
+        float distancia = sqrt(dx*dx + dz*dz);
+
+        if (distancia < esfera_raio + kart_raio){
+            kart_x = old_kart_x;
+            kart_z = old_kart_z;
+        }
+        ///////////// Colisão esfera e Coelho
+
+
+
+
 
         // Aqui executamos as operações de renderização
 
@@ -411,7 +444,6 @@ int main(int argc, char* argv[])
         glm::vec4 camera_position_c = glm::vec4(camera_x, camera_y, camera_z, 1.0f);
         
         //glm::vec4     = glm::vec4(0.0f,0.0f,0.0f,1.0f); // Ponto "l", para onde a câmera (look-at) estará sempre olhando
-        float look_distance = 2.0f;
 
         glm::vec4 camera_lookat_l = glm::vec4(
             kart_x + sin(kart_rotation),
@@ -469,7 +501,7 @@ int main(int argc, char* argv[])
         #define PLANE  2
 
         // Desenhamos o modelo da esfera
-        model = Matrix_Translate(-1.0f,0.0f,0.0f)
+        model = Matrix_Translate(esfera_x,0.0f,esfera_z)
               * Matrix_Rotate_Z(0.6f)
               * Matrix_Rotate_X(0.2f)
               * Matrix_Rotate_Y(g_AngleY + (float)glfwGetTime() * 0.1f);
