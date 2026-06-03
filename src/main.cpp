@@ -300,7 +300,11 @@ int main(int argc, char* argv[])
 
     // Carregamos duas imagens para serem utilizadas como textura
     LoadTextureImage("../../data/red_brick_diff_1k.jpg");      // TextureImage0
-    LoadTextureImage("../../data/rocky_terrain_02_diff_1k.jpg"); // TextureImage1
+    // LoadTextureImage("../../data/rocky_terrain_02_diff_1k.jpg"); // TextureImage1
+    // LoadTextureImage("../../data/asphalt_texture_1_by_ravenarcana_d2692gs.jpg"); // TextureImage1
+    // LoadTextureImage("../../data/asphalt_texture_seamless_by_rfalworth_d6y71cv.jpg"); // TextureImage1
+    LoadTextureImage("../../data/textura_grama.png"); // TextureImage1
+
 
     // Construímos a representação de objetos geométricos através de malhas de triângulos
     ObjModel spheremodel("../../data/sphere.obj");
@@ -337,10 +341,11 @@ int main(int argc, char* argv[])
     float kart_z = 0.0f;
 
     float kart_rotation = 0.0f;
+    float kart_velocidade = 0.0f;
     //////////////////////////////////////////////////// Controladora do Kart
 
     //////////////////////////////////////////////////// Camera Distancia
-    float camera_distance = 3.0f;
+    float camera_distance = 5.0f;
     float camera_height = 1.5f;
     //////////////////////////////////////////////////// Camera Distancia
 
@@ -364,24 +369,40 @@ int main(int argc, char* argv[])
         float old_kart_z = kart_z;
 
         ///////////// Contralando a rotação do kart
-        // W o S
+        // Aceleração
         if (glfwGetKey(window, GLFW_KEY_W) == GLFW_PRESS){
-            kart_x += sin(kart_rotation) * 0.01f;
-            kart_z -= cos(kart_rotation) * 0.01f;
+            kart_velocidade += 0.01f;
         }
 
-        // E o S
+        // Ré
         if (glfwGetKey(window, GLFW_KEY_S) == GLFW_PRESS){
-            kart_x -= sin(kart_rotation) * 0.01f;
-            kart_z += cos(kart_rotation) * 0.01f;
+            kart_velocidade -= 0.0005f;
         }
 
-        if (glfwGetKey(window, GLFW_KEY_A) == GLFW_PRESS){    
-            kart_rotation += 0.02f;
+        // Limite de velocidade
+        if (kart_velocidade > 0.8f)
+            kart_velocidade = 0.8f;
+
+        if (kart_velocidade < -0.4f)
+            kart_velocidade = -0.4f;
+
+
+        // Atrito
+        kart_velocidade *= 0.995f;
+
+        // Movimento do kart
+        kart_x += sin(kart_rotation) * kart_velocidade;
+        kart_z -= cos(kart_rotation) * kart_velocidade;
+
+        // Intensidade da curva baseada na velocidade
+        float velocidade_normalizada = fabs(kart_velocidade) / 0.2f;
+
+        if (glfwGetKey(window, GLFW_KEY_A) == GLFW_PRESS){
+            kart_rotation -= 0.02f;
         }
 
         if (glfwGetKey(window, GLFW_KEY_D) == GLFW_PRESS){
-            kart_rotation -= 0.02f;
+            kart_rotation += 0.02f;
         }
         ///////////// Contralando a rotação do kart
 
@@ -465,7 +486,7 @@ int main(int argc, char* argv[])
         // Note que, no sistema de coordenadas da câmera, os planos near e far
         // estão no sentido negativo! Veja slides 176-204 do documento Aula_09_Projecoes.pdf.
         float nearplane = -0.1f;  // Posição do "near plane"
-        float farplane  = -10.0f; // Posição do "far plane"
+        float farplane  = -100.0f; // Posição do "far plane"
 
         if (g_UsePerspectiveProjection)
         {
@@ -499,6 +520,7 @@ int main(int argc, char* argv[])
         #define SPHERE 0
         #define BUNNY  1
         #define PLANE  2
+        #define CUBE   3
 
         // Desenhamos o modelo da esfera
         model = Matrix_Translate(esfera_x,0.0f,esfera_z)
@@ -519,10 +541,19 @@ int main(int argc, char* argv[])
         DrawVirtualObject("the_bunny");
 
         // Desenhamos o plano do chão
-        model = Matrix_Translate(0.0f,-1.1f,0.0f);
+        model = Matrix_Translate(0.0f,-1.1f,0.0f)
+                * Matrix_Scale(15.0f,1.0f,300.0f);
         glUniformMatrix4fv(g_model_uniform, 1 , GL_FALSE , glm::value_ptr(model));
         glUniform1i(g_object_id_uniform, PLANE);
         DrawVirtualObject("the_plane");
+
+        // Desenhamos a Cubo
+        model =
+        Matrix_Translate(-7.0f,0.0f,0.0f)
+        * Matrix_Scale(1.0f,2.0f,300.0f);
+        glUniformMatrix4fv(g_model_uniform,1,GL_FALSE,glm::value_ptr(model));
+        glUniform1i(g_object_id_uniform, PLANE);
+        DrawVirtualObject("the_cube");
 
         // Imprimimos na tela os ângulos de Euler que controlam a rotação do
         // terceiro cubo.
@@ -584,8 +615,8 @@ void LoadTextureImage(const char* filename)
     glGenSamplers(1, &sampler_id);
 
     // Veja slides 95-96 do documento Aula_20_Mapeamento_de_Texturas.pdf
-    glSamplerParameteri(sampler_id, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
-    glSamplerParameteri(sampler_id, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
+    glSamplerParameteri(sampler_id, GL_TEXTURE_WRAP_S, GL_REPEAT);
+    glSamplerParameteri(sampler_id, GL_TEXTURE_WRAP_T, GL_REPEAT);
 
     // Parâmetros de amostragem da textura.
     glSamplerParameteri(sampler_id, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_LINEAR);
