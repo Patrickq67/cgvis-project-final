@@ -319,6 +319,10 @@ int main(int argc, char* argv[])
     ComputeNormals(&planemodel);
     BuildTrianglesAndAddToVirtualScene(&planemodel);
 
+    ObjModel cubemodel("../../data/cube.obj");
+ComputeNormals(&cubemodel);
+BuildTrianglesAndAddToVirtualScene(&cubemodel);
+
     if ( argc > 1 )
     {
         ObjModel model(argv[1]);
@@ -486,7 +490,7 @@ int main(int argc, char* argv[])
         // Note que, no sistema de coordenadas da câmera, os planos near e far
         // estão no sentido negativo! Veja slides 176-204 do documento Aula_09_Projecoes.pdf.
         float nearplane = -0.1f;  // Posição do "near plane"
-        float farplane  = -100.0f; // Posição do "far plane"
+        float farplane  = -1000.0f; // Posição do "far plane"
 
         if (g_UsePerspectiveProjection)
         {
@@ -548,12 +552,33 @@ int main(int argc, char* argv[])
         DrawVirtualObject("the_plane");
 
         // Desenhamos a Cubo
-        model =
-        Matrix_Translate(-7.0f,0.0f,0.0f)
-        * Matrix_Scale(1.0f,2.0f,300.0f);
+        model = Matrix_Translate(3.0f,0.0f,0.0f)
+            * Matrix_Scale(0.5f,0.5f,0.5f);
         glUniformMatrix4fv(g_model_uniform,1,GL_FALSE,glm::value_ptr(model));
-        glUniform1i(g_object_id_uniform, PLANE);
+        glUniform1i(g_object_id_uniform, BUNNY);
         DrawVirtualObject("the_cube");
+
+        // Barreira esquerda
+for (float z = -300.0f; z <= 300.0f; z += 2.0f)
+{
+    model = Matrix_Translate(-15.0f, -0.1f, z)
+          * Matrix_Scale(0.5f, 1.5f, 0.5f);
+
+    glUniformMatrix4fv(g_model_uniform, 1, GL_FALSE, glm::value_ptr(model));
+    glUniform1i(g_object_id_uniform, BUNNY); // ou crie um ID próprio para o cubo
+    DrawVirtualObject("the_cube");
+}
+
+// Barreira direita
+for (float z = -300.0f; z <= 300.0f; z += 2.0f)
+{
+    model = Matrix_Translate(15.0f, -0.1f, z)
+          * Matrix_Scale(0.5f, 1.5f, 0.5f);
+
+    glUniformMatrix4fv(g_model_uniform, 1, GL_FALSE, glm::value_ptr(model));
+    glUniform1i(g_object_id_uniform, BUNNY); // ou crie um ID próprio para o cubo
+    DrawVirtualObject("the_cube");
+}
 
         // Imprimimos na tela os ângulos de Euler que controlam a rotação do
         // terceiro cubo.
