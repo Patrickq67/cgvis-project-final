@@ -1,0 +1,14 @@
+# Blender 4.0.2 MTL File: 'fence.blend'
+# www.blender.org
+
+newmtl fence
+Ka 1.000000 1.000000 1.000000
+Ks 0.500000 0.500000 0.500000
+Ke 0.000000 0.000000 0.000000
+Ni 1.450000
+d 1.000000
+illum 2
+map_Kd C:/Users/Mattes Beese/Documents/CGTrader/fence/textures/fence_color.png
+map_Ns C:/Users/Mattes Beese/Documents/CGTrader/fence/textures/fence_roughness.png
+map_refl C:/Users/Mattes Beese/Documents/CGTrader/fence/textures/fence_metalness.png
+map_Bump -bm 2.000000 C:/Users/Mattes Beese/Documents/CGTrader/fence/textures/fence_normal.png

@@ -320,8 +320,17 @@ int main(int argc, char* argv[])
     BuildTrianglesAndAddToVirtualScene(&planemodel);
 
     ObjModel cubemodel("../../data/cube.obj");
-ComputeNormals(&cubemodel);
-BuildTrianglesAndAddToVirtualScene(&cubemodel);
+    ComputeNormals(&cubemodel);
+    BuildTrianglesAndAddToVirtualScene(&cubemodel);
+
+    ObjModel fencemodel("../../data/fence.obj");
+    ComputeNormals(&fencemodel);
+    BuildTrianglesAndAddToVirtualScene(&fencemodel);
+
+    ObjModel hill1model("../../data/hill1.obj");
+    ComputeNormals(&hill1model);
+    BuildTrianglesAndAddToVirtualScene(&hill1model);
+
 
     if ( argc > 1 )
     {
@@ -490,7 +499,7 @@ BuildTrianglesAndAddToVirtualScene(&cubemodel);
         // Note que, no sistema de coordenadas da câmera, os planos near e far
         // estão no sentido negativo! Veja slides 176-204 do documento Aula_09_Projecoes.pdf.
         float nearplane = -0.1f;  // Posição do "near plane"
-        float farplane  = -1000.0f; // Posição do "far plane"
+        float farplane  = -80.0f; // Posição do "far plane"
 
         if (g_UsePerspectiveProjection)
         {
@@ -525,6 +534,8 @@ BuildTrianglesAndAddToVirtualScene(&cubemodel);
         #define BUNNY  1
         #define PLANE  2
         #define CUBE   3
+        #define FENCE  4
+        #define HILL1  5
 
         // Desenhamos o modelo da esfera
         model = Matrix_Translate(esfera_x,0.0f,esfera_z)
@@ -558,27 +569,44 @@ BuildTrianglesAndAddToVirtualScene(&cubemodel);
         glUniform1i(g_object_id_uniform, BUNNY);
         DrawVirtualObject("the_cube");
 
-        // Barreira esquerda
-for (float z = -300.0f; z <= 300.0f; z += 2.0f)
-{
-    model = Matrix_Translate(-15.0f, -0.1f, z)
-          * Matrix_Scale(0.5f, 1.5f, 0.5f);
+        model = Matrix_Translate(-30.0f, -1.1f, 0.0f)
+      * Matrix_Scale(5.0f, 5.0f, 5.0f);
 
-    glUniformMatrix4fv(g_model_uniform, 1, GL_FALSE, glm::value_ptr(model));
-    glUniform1i(g_object_id_uniform, BUNNY); // ou crie um ID próprio para o cubo
-    DrawVirtualObject("the_cube");
-}
+glUniformMatrix4fv(
+    g_model_uniform,
+    1,
+    GL_FALSE,
+    glm::value_ptr(model)
+);
 
-// Barreira direita
-for (float z = -300.0f; z <= 300.0f; z += 2.0f)
-{
-    model = Matrix_Translate(15.0f, -0.1f, z)
-          * Matrix_Scale(0.5f, 1.5f, 0.5f);
+glUniform1i(g_object_id_uniform, HILL1);
 
-    glUniformMatrix4fv(g_model_uniform, 1, GL_FALSE, glm::value_ptr(model));
-    glUniform1i(g_object_id_uniform, BUNNY); // ou crie um ID próprio para o cubo
-    DrawVirtualObject("the_cube");
-}
+DrawVirtualObject("NOME_DO_OBJETO");
+
+    // Barreira esquerda
+    for (float z = -300.0f; z <= 300.0f; z += 2.0f)
+    {
+        model = Matrix_Translate(-15.0f, -1.8f, z)
+        * Matrix_Scale(0.5f, 0.5f, 0.5f);
+
+        glUniformMatrix4fv(g_model_uniform, 1, GL_FALSE, glm::value_ptr(model));
+        glUniform1i(g_object_id_uniform, BUNNY); // ou crie um ID próprio para o cubo
+        DrawVirtualObject("fence");
+    }
+
+    // Barreira direita
+    for (float z = -300.0f; z <= 300.0f; z += 2.0f)
+    {
+        model = Matrix_Translate(15.0f, -1.8f, z)
+        * Matrix_Scale(0.5f, 0.5f, 0.5f);
+
+        glUniformMatrix4fv(g_model_uniform, 1, GL_FALSE, glm::value_ptr(model));
+        glUniform1i(g_object_id_uniform, BUNNY); // ou crie um ID próprio para o cubo
+        DrawVirtualObject("fence");
+    }
+
+
+
 
         // Imprimimos na tela os ângulos de Euler que controlam a rotação do
         // terceiro cubo.
